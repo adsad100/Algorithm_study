@@ -1,7 +1,6 @@
-// Problem 7 in leetcode
-// 해당 정수를 문자열로 바꾼 뒤 음수인지 확인
-// 이후 다른 문자열에 reverse하게 저장한 뒤 정수형 변수에 입력
-// 이 과정에서 out of range exception 발생할 수 있기 때문에 예외처리
+// Problem 20 in leetcode
+// Using stack for find correct parenthese
+// stack에 쌓아놓고 top을 통해 올바른 짝인지 확인
 
 #include <iostream>
 #include <vector>
@@ -10,24 +9,33 @@ using namespace std;
 
 class Solution {
 public:
-    int reverse(int x) {
-        string str = to_string(x);
-        string ret = "";
-        bool minus = str[0] == '-'? true: false;
-        
-        int startIndex = minus? 1 : 0;
-        
-        for(int i = startIndex; i < str.size(); i++){
-            ret = str[i] + ret;
+    bool isValid(string s) {
+        vector<char> stack;
+        bool flag = true;
+        for(int i = 0; i < s.length(); i++){
+            switch(s[i]){
+                case '(': case '{': case '[':
+                    stack.push_back(s[i]);
+                    break;
+                case ')':
+                    if(!stack.empty() && stack[stack.size() -1] == '(')
+                        stack.pop_back();
+                    else flag = false;
+                    break;
+                case '}':
+                    if(!stack.empty() && stack[stack.size() -1] == '{')
+                        stack.pop_back();
+                    else flag = false;
+                    break;
+                case ']':
+                    if(!stack.empty() && stack[stack.size() -1] == '[')
+                        stack.pop_back();
+                    else flag = false;
+                    break;
+            }
+            if(!flag) return flag;
         }
-        int num;
-        try {
-            num = stoi(ret);
-        } catch (const std::exception& expn) {
-            return 0;
-        }
-        
-        if(minus) return -num;
-        return num;
+        if(stack.empty()) return true;
+        else return false;
     }
 };
